@@ -5,30 +5,37 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.haazad.stargame.screen.BaseScreen;
+import ru.haazad.stargame.sprite.impl.Background;
+import ru.haazad.stargame.utils.Rect;
 
 public class MenuScreen extends BaseScreen {
-    private static float SPEED = 2f;
 
     private Texture img;
+    private Texture bg;
     private Vector2 position;
-    private Vector2 velocity;
-    private Vector2 direction;
+
+    private Background background;
 
     @Override
     public void show() {
         super.show();
         img = new Texture("badlogic.jpg");
+        bg = new Texture("textures/background.png");
         position = new Vector2();
-        velocity = new Vector2(1, 1);
-        direction = new Vector2();
+        background = new Background(bg);
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         batch.begin();
-        move();
-        batch.draw(img, position.x, position.y);
+        background.draw(batch);
         batch.end();
     }
 
@@ -36,17 +43,13 @@ public class MenuScreen extends BaseScreen {
     public void dispose() {
         super.dispose();
         img.dispose();
+        bg.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        direction.set(screenX - (float) img.getWidth() / 2, Gdx.graphics.getHeight() - screenY - (float) img.getHeight() / 2);
-        return super.touchDown(screenX, screenY, pointer, button);
-    }
-
-    private void move() {
-        velocity = direction.cpy().sub(position).nor().scl(SPEED);
-        position.add(velocity);
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        position.set(touch);
+        return super.touchDown(touch, pointer, button);
     }
 
 }
