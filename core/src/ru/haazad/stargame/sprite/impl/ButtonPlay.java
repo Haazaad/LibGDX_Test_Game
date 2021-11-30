@@ -2,8 +2,8 @@ package ru.haazad.stargame.sprite.impl;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ru.haazad.stargame.screen.impl.GameScreen;
 import ru.haazad.stargame.sprite.BaseButton;
 import ru.haazad.stargame.utils.Rect;
 
@@ -29,6 +29,6 @@ public class ButtonPlay extends BaseButton {
 
     @Override
     public void action() {
-
+        game.setScreen(new GameScreen());
     }
 }
