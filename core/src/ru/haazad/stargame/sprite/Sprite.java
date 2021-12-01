@@ -14,6 +14,10 @@ public class Sprite extends Rect {
     protected TextureRegion[] regions;
     protected int frame;
 
+    private boolean isDestroyed;
+
+    public Sprite() {}
+
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
@@ -44,11 +48,11 @@ public class Sprite extends Rect {
         setWidth(height * aspect);
     }
 
-    public boolean touchDown(Vector2 touch, int pointer, int buttom) {
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
         return false;
     }
 
-    public boolean touchUp(Vector2 touch, int pointer, int buttom) {
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
         return false;
     }
 
@@ -70,5 +74,17 @@ public class Sprite extends Rect {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public void destroy() {
+        this.isDestroyed = true;
+    }
+
+    public void flushDestroy() {
+        this.isDestroyed = false;
+    }
+
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 }
