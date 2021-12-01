@@ -1,6 +1,8 @@
 package ru.haazad.stargame.sprite.impl;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +16,7 @@ public class MainShip extends Sprite {
     private static final float HEIGHT = 0.1f;
     private static final float MARGIN = 0.03f;
     private static final int INVALID_POINTER = -1;
+    private static final int BULLET_FREQUENCY = 1;
 
     private Rect worldBounds;
 
@@ -25,12 +28,15 @@ public class MainShip extends Sprite {
     private final Vector2 vBullet;
     private final float bulletHeight;
     private int damage;
+    private Sound bulletSound;
 
     private boolean pressedLeft;
     private boolean pressedRight;
 
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
+
+    private float shootTimer = 0f;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -41,6 +47,7 @@ public class MainShip extends Sprite {
         this.vBullet = new Vector2(0, 0.5f);
         this.bulletHeight = 0.01f;
         this.damage = 1;
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
     }
 
     @Override
@@ -60,6 +67,11 @@ public class MainShip extends Sprite {
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
             stop();
+        }
+        shootTimer += delta;
+        if (shootTimer >= BULLET_FREQUENCY) {
+            shoot();
+            shootTimer = 0f;
         }
     }
 
@@ -114,9 +126,6 @@ public class MainShip extends Sprite {
                 pressedRight = true;
                 moveRight();
                 break;
-            case Input.Keys.UP:
-                shoot();
-                break;
         }
         return false;
     }
@@ -160,5 +169,10 @@ public class MainShip extends Sprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, position, vBullet, bulletHeight, worldBounds, damage);
+        bulletSound.play();
+    }
+
+    public void dispose() {
+        bulletSound.dispose();
     }
 }
