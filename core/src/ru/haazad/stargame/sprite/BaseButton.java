@@ -14,17 +14,18 @@ public abstract class BaseButton extends Sprite{
     }
 
     @Override
-    public boolean touchDown(Vector2 touch, int pointer, int buttom) {
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
         if (isPressed || !isMe(touch)) {
             return false;
         }
         this.pointer = pointer;
+        this.isPressed = true;
         this.scale = SCALE;
         return false;
     }
 
     @Override
-    public boolean touchUp(Vector2 touch, int pointer, int buttom) {
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
         if (this.pointer != pointer || !isPressed) {
             return false;
         }
