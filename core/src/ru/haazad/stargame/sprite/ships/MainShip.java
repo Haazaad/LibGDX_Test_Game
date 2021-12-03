@@ -1,34 +1,20 @@
-package ru.haazad.stargame.sprite.impl;
+package ru.haazad.stargame.sprite.ships;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.haazad.stargame.pool.impl.BulletPool;
-import ru.haazad.stargame.sprite.Sprite;
+import ru.haazad.stargame.sprite.Ship;
 import ru.haazad.stargame.utils.Rect;
 
-public class MainShip extends Sprite {
+public class MainShip extends Ship {
 
     private static final float HEIGHT = 0.1f;
     private static final float MARGIN = 0.03f;
     private static final int INVALID_POINTER = -1;
-    private static final int BULLET_FREQUENCY = 1;
-
-    private Rect worldBounds;
-
-    private final Vector2 v;
-    private final Vector2 vZero;
-
-    private final BulletPool bulletPool;
-    private final TextureRegion bulletRegion;
-    private final Vector2 vBullet;
-    private final float bulletHeight;
-    private int damage;
-    private Sound bulletSound;
+    private static final float RELOAD_INTERVAL = 0.2f;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -38,16 +24,19 @@ public class MainShip extends Sprite {
 
     private float shootTimer = 0f;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.v = new Vector2();
-        this.vZero = new Vector2(0.5f, 0f);
+        this.v0 = new Vector2(0.5f, 0f);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
-        this.vBullet = new Vector2(0, 0.5f);
+        this.bulletV = new Vector2(0, 0.5f);
         this.bulletHeight = 0.01f;
         this.damage = 1;
-        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        this.bulletSound = bulletSound;
+        this.reloadInterval = RELOAD_INTERVAL;
+        this.reloadTimer = 0;
+        this.hp = 100;
     }
 
     @Override
@@ -59,6 +48,7 @@ public class MainShip extends Sprite {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         position.mulAdd(v, delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
@@ -67,11 +57,6 @@ public class MainShip extends Sprite {
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
             stop();
-        }
-        shootTimer += delta;
-        if (shootTimer >= BULLET_FREQUENCY) {
-            shoot();
-            shootTimer = 0f;
         }
     }
 
@@ -155,21 +140,15 @@ public class MainShip extends Sprite {
     }
 
     public void moveLeft() {
-        v.set(vZero).rotateDeg(180);
+        v.set(v0).rotateDeg(180);
     }
 
     public void moveRight() {
-        v.set(vZero);
+        v.set(v0);
     }
 
     public void stop() {
         v.setZero();
-    }
-
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, position, vBullet, bulletHeight, worldBounds, damage);
-        bulletSound.play();
     }
 
     public void dispose() {
