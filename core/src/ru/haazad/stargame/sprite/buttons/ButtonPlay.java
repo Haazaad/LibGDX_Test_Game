@@ -1,4 +1,4 @@
-package ru.haazad.stargame.sprite.impl;
+package ru.haazad.stargame.sprite.buttons;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
