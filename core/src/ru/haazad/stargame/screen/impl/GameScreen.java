@@ -44,18 +44,19 @@ public class GameScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
 
+        bulletPool = new BulletPool();
+
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
 
-        bulletPool = new BulletPool();
-        enemyPool = new EnemyPool(bulletPool,bulletSound, worldBounds);
+        mainShip = new MainShip(atlas, bulletPool, laserSound);
+
+        enemyPool = new EnemyPool(bulletPool, bulletSound, worldBounds, mainShip);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
-
-        mainShip = new MainShip(atlas, bulletPool, laserSound);
 
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
 
@@ -76,7 +77,7 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        for (Star star: stars) {
+        for (Star star : stars) {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
@@ -120,7 +121,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
-        for (Star star: stars) {
+        for (Star star : stars) {
             star.update(delta);
         }
         bulletPool.updateActiveSprites(delta);
@@ -137,7 +138,7 @@ public class GameScreen extends BaseScreen {
     private void draw() {
         batch.begin();
         background.draw(batch);
-        for (Star star: stars) {
+        for (Star star : stars) {
             star.draw(batch);
         }
         mainShip.draw(batch);
