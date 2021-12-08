@@ -24,8 +24,6 @@ public class MainShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    private float shootTimer = 0f;
-
     public MainShip(TextureAtlas atlas, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.v = new Vector2();
@@ -39,7 +37,7 @@ public class MainShip extends Ship {
         this.bulletSound = bulletSound;
         this.reloadInterval = RELOAD_INTERVAL;
         this.reloadTimer = 0;
-        this.hp = 100;
+        this.hp = 10;
     }
 
     @Override
