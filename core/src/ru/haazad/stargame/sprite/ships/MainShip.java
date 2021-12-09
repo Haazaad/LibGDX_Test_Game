@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.haazad.stargame.pool.impl.BulletPool;
+import ru.haazad.stargame.pool.impl.ExplosionPool;
 import ru.haazad.stargame.sprite.Ship;
+import ru.haazad.stargame.sprite.impl.Bullet;
 import ru.haazad.stargame.utils.Rect;
 
 public class MainShip extends Ship {
@@ -22,12 +24,11 @@ public class MainShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    private float shootTimer = 0f;
-
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
+    public MainShip(TextureAtlas atlas, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.v = new Vector2();
         this.v0 = new Vector2(0.5f, 0f);
+        this.explosionPool = explosionPool;
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletV = new Vector2(0, 0.5f);
@@ -36,7 +37,7 @@ public class MainShip extends Ship {
         this.bulletSound = bulletSound;
         this.reloadInterval = RELOAD_INTERVAL;
         this.reloadTimer = 0;
-        this.hp = 100;
+        this.hp = 10;
     }
 
     @Override
@@ -58,6 +59,14 @@ public class MainShip extends Ship {
             setLeft(worldBounds.getLeft());
             stop();
         }
+    }
+
+    public boolean isBulletCollision(Bullet bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > position.y
+                || bullet.getTop() < getBottom()
+        );
     }
 
     @Override
@@ -151,7 +160,4 @@ public class MainShip extends Ship {
         v.setZero();
     }
 
-    public void dispose() {
-        bulletSound.dispose();
-    }
 }

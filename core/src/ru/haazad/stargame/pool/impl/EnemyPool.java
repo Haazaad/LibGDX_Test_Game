@@ -9,20 +9,20 @@ import ru.haazad.stargame.utils.Rect;
 
 public class EnemyPool extends SpritesPool<EnemyShip> {
 
+    private final ExplosionPool explosionPool;
     private final BulletPool bulletPool;
     private final Sound bulletSound;
     private final Rect worldBounds;
-    private final MainShip mainShip;
 
-    public EnemyPool(BulletPool bulletPool, Sound bulletSound, Rect worldBounds, MainShip mainShip) {
+    public EnemyPool(ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound, Rect worldBounds) {
+        this.explosionPool = explosionPool;
         this.bulletPool = bulletPool;
         this.bulletSound = bulletSound;
         this.worldBounds = worldBounds;
-        this.mainShip = mainShip;
     }
 
     @Override
     protected EnemyShip newObject() {
-        return new EnemyShip(bulletPool, bulletSound, worldBounds, mainShip);
+        return new EnemyShip(explosionPool, bulletPool, bulletSound, worldBounds);
     }
 }

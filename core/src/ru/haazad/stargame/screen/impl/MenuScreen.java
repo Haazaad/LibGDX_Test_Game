@@ -7,9 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.haazad.stargame.screen.BaseScreen;
 import ru.haazad.stargame.sprite.impl.Background;
-import ru.haazad.stargame.sprite.impl.ButtonExit;
-import ru.haazad.stargame.sprite.impl.ButtonPlay;
-import ru.haazad.stargame.sprite.impl.Logo;
+import ru.haazad.stargame.sprite.buttons.ButtonExit;
+import ru.haazad.stargame.sprite.buttons.ButtonPlay;
 import ru.haazad.stargame.sprite.impl.Star;
 import ru.haazad.stargame.utils.Rect;
 
